@@ -19,13 +19,12 @@ function Ui:load()
     table.insert(self.buttons, Button:new(1, 2, margin, "bath"))
     table.insert(self.buttons, Button:new(1, 3, margin, "cool off"))
     table.insert(self.buttons, Button:new(1, 4, margin, "medical"))
-
-    for _, button in ipairs(self.buttons) do
-        button:load()
-    end
 end
 
 function Ui:update(dt)
+    for _, button in ipairs(self.buttons) do
+        button:update(dt)
+    end
 end
 
 function Ui:draw()

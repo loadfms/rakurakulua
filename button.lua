@@ -17,15 +17,15 @@ function Button:new(col, i, margin, text)
 end
 
 function Button:load()
+end
+
+function Button:update(dt)
     local ww, wh = love.graphics.getDimensions()
 
     self.width   = ww * (1 / 5)
     self.height  = wh * (1 / 5)
     self.y       = self.i * (self.height + self.margin)
     self.x       = self.col * (ww - self.width)
-end
-
-function Button:update(dt)
 end
 
 function Button:draw()

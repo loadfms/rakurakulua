@@ -5,6 +5,7 @@ function Pet:load()
 
     self.speed = 20
     self.state = "idle"
+    self.level = 1
 
     self.spriteSheet = love.graphics.newImage('assets/pet.png')
 
@@ -21,10 +22,17 @@ function Pet:load()
     self.animationSpeed = 1
 
     self.animations = {}
-    self.animations.idle = anim8.newAnimation(self.grid('1-2', 12), self.animationSpeed)
-    self.animations.sleeping = anim8.newAnimation(self.grid('1-2', 11), self.animationSpeed)
 
-    self.anim = self.animations.idle
+    self.animations[1] = {}
+    self.animations[2] = {}
+
+    self.animations[1].idle = anim8.newAnimation(self.grid('1-2', 14), self.animationSpeed)
+    self.animations[1].sleeping = anim8.newAnimation(self.grid('1-2', 13), self.animationSpeed)
+
+    self.animations[2].idle = anim8.newAnimation(self.grid('1-2', 12), self.animationSpeed)
+    self.animations[2].sleeping = anim8.newAnimation(self.grid('1-2', 11), self.animationSpeed)
+
+    self.anim = self.animations[self.level].idle
 end
 
 function Pet:update(dt)
@@ -70,7 +78,14 @@ function Pet:draw()
     self.anim:draw(self.spriteSheet, self.x, self.y, nil, self.scale, self.scale)
 end
 
+function Pet:evolve()
+    self.level = self.level + 1
+    self.anim = self.animations[self.level].idle
+
+    self.anim:draw(self.spriteSheet, self.x, self.y, nil, self.scale, self.scale)
+end
+
 function Pet:feed()
-    self.anim = self.animations.sleeping
+    self.anim = self.animations[self.level].sleeping
     self.state = "sleeping"
 end

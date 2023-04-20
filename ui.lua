@@ -56,5 +56,9 @@ function Ui:mousepressed(x, y, buttonIndex)
         if action == "food" then
             Pet:feed()
         end
+
+        if action == "pet" then
+            Pet:evolve()
+        end
     end
 end

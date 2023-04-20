@@ -1,12 +1,9 @@
 require("ui")
 
-function love.conf(t)
-    t.window.resizable = true
-    t.window.borderless = true
-end
-
 function love.load()
-    love.window.setMode(800, 600, { resizable = true, borderless = true })
+    anim8 = require 'libraries/anim8'
+
+    love.graphics.setDefaultFilter("nearest", "nearest")
 
     Ui:load()
 end

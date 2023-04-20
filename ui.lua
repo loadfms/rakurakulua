@@ -1,11 +1,12 @@
 require "button"
+require "pet"
 
 Ui = {}
 
 function Ui:load()
-    local ww, wh = love.graphics.getDimensions()
     self.buttons = {}
     local margin = 0
+
 
     table.insert(self.buttons, Button:new(0, 0, margin, "water"))
     table.insert(self.buttons, Button:new(0, 1, margin, "food"))
@@ -19,19 +20,30 @@ function Ui:load()
     table.insert(self.buttons, Button:new(1, 2, margin, "bath"))
     table.insert(self.buttons, Button:new(1, 3, margin, "cool off"))
     table.insert(self.buttons, Button:new(1, 4, margin, "medical"))
+
+    Pet:load()
 end
 
 function Ui:update(dt)
     for _, button in ipairs(self.buttons) do
         button:update(dt)
     end
+
+
+    Pet:update(dt)
 end
 
 function Ui:draw()
-    -- Draw rectangle
+    local red = 137 / 255
+    local green = 213 / 255
+    local blue = 185 / 255
+    love.graphics.setBackgroundColor(red, green, blue)
+
     for _, button in ipairs(self.buttons) do
         button:draw()
     end
+
+    Pet:draw()
 end
 
 function Ui:mousepressed(x, y, buttonIndex)

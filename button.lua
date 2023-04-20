@@ -1,6 +1,6 @@
 Button = {}
 
-function Button:new(col, i, margin, slug)
+function Button:new(col, i, margin, slug, spriteRow)
     local o = {}
 
     o.x = 0
@@ -10,6 +10,7 @@ function Button:new(col, i, margin, slug)
     o.color = { 0.5, 0.5, 0.5 }
     o.slug = slug
     o.col = col
+    o.spriteRow = spriteRow
 
     setmetatable(o, self)
     self.__index = self
@@ -17,26 +18,29 @@ function Button:new(col, i, margin, slug)
 end
 
 function Button:load()
+    self.spriteSheet = love.graphics.newImage('assets/pet.png')
+
+    self.spriteWidth = 13
+    self.spriteHeight = 13
+    self.grid = anim8.newGrid(self.spriteWidth, self.spriteHeight, self.spriteSheet:getWidth(),
+        self.spriteSheet:getHeight())
+    self.scale = 2
+
+    self.animations = {}
+    self.animations.default = anim8.newAnimation(self.grid('1-1', self.spriteRow), 1)
 end
 
 function Button:update(dt)
     local ww, wh = love.graphics.getDimensions()
 
-    self.width   = ww * (1 / 5)
+    self.width   = ww * (1 / 7)
     self.height  = wh * (1 / 5)
-    self.y       = self.i * (self.height + self.margin)
-    self.x       = self.col * (ww - self.width)
+    self.y       = (self.i * (self.height + self.margin)) + 13
+    self.x       = (self.col * (ww - self.width)) + 13
 end
 
 function Button:draw()
-    -- Draw rectangle
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-
-    -- Write text
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.setFont(love.graphics.newFont(24))
-    love.graphics.print(self.slug, self.x, self.y + (self.height / 2) - 12)
+    self.animations.default:draw(self.spriteSheet, self.x, self.y, nil, self.scale, self.scale)
 end
 
 function Button:mousepressed(x, y, buttonIndex)

@@ -1,6 +1,6 @@
 Button = {}
 
-function Button:new(col, i, margin, text)
+function Button:new(col, i, margin, slug)
     local o = {}
 
     o.x = 0
@@ -8,7 +8,7 @@ function Button:new(col, i, margin, text)
     o.i = i
     o.margin = margin
     o.color = { 0.5, 0.5, 0.5 }
-    o.text = text
+    o.slug = slug
     o.col = col
 
     setmetatable(o, self)
@@ -36,11 +36,12 @@ function Button:draw()
     -- Write text
     love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(love.graphics.newFont(24))
-    love.graphics.print(self.text, self.x, self.y + (self.height / 2) - 12)
+    love.graphics.print(self.slug, self.x, self.y + (self.height / 2) - 12)
 end
 
 function Button:mousepressed(x, y, buttonIndex)
     if buttonIndex == 1 and x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
-        print("clicked on ", self.text)
+        print("clicked on ", self.slug)
+        return self.slug
     end
 end

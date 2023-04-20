@@ -15,10 +15,10 @@ function Ui:load()
     table.insert(self.buttons, Button:new(0, 4, margin, "check"))
 
 
-    table.insert(self.buttons, Button:new(1, 0, margin, "play games"))
+    table.insert(self.buttons, Button:new(1, 0, margin, "play_games"))
     table.insert(self.buttons, Button:new(1, 1, margin, "educate"))
     table.insert(self.buttons, Button:new(1, 2, margin, "bath"))
-    table.insert(self.buttons, Button:new(1, 3, margin, "cool off"))
+    table.insert(self.buttons, Button:new(1, 3, margin, "cool_off"))
     table.insert(self.buttons, Button:new(1, 4, margin, "medical"))
 
     Pet:load()
@@ -48,6 +48,9 @@ end
 
 function Ui:mousepressed(x, y, buttonIndex)
     for _, button in ipairs(self.buttons) do
-        button:mousepressed(x, y, buttonIndex)
+        local action = button:mousepressed(x, y, buttonIndex)
+        if action == "food" then
+            Pet:feed()
+        end
     end
 end

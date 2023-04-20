@@ -1,31 +1,76 @@
 Pet = {}
 
 function Pet:load()
-    self.x = 0
-    self.y = 0
-    self.speed = 100
+    ww, wh = love.graphics.getDimensions()
 
-    self.spriteSheet = love.graphics.newImage('assets/player.png')
+    self.speed = 20
+    self.state = "idle"
 
-    self.scale = 4
-    self.spriteWidth = self.spriteSheet:getWidth() / 7
-    self.spriteHeight = self.spriteSheet:getHeight()
+    self.spriteSheet = love.graphics.newImage('assets/pet.png')
+
+    self.scale = 10
+    self.spriteWidth = 13
+    self.spriteHeight = 13
     self.grid = anim8.newGrid(self.spriteWidth, self.spriteHeight, self.spriteSheet:getWidth(),
         self.spriteSheet:getHeight())
 
+
+    self.x = (ww / 2) - (self.spriteWidth * self.scale / 2)
+    self.y = (wh / 2) - (self.spriteHeight * self.scale / 3)
+
+    self.animationSpeed = 1
+
     self.animations = {}
-    self.animations.idle = anim8.newAnimation(self.grid('1-7', 1), 0.2)
+    self.animations.idle = anim8.newAnimation(self.grid('1-2', 12), self.animationSpeed)
+    self.animations.sleeping = anim8.newAnimation(self.grid('1-2', 11), self.animationSpeed)
+
+    self.anim = self.animations.idle
 end
 
 function Pet:update(dt)
-    local ww, wh = love.graphics.getDimensions()
+    local buttonsWidth = ww * (1 / 5)
 
-    self.x = (ww / 2) - (self.spriteWidth * self.scale / 2)
-    self.y = wh - self.spriteHeight * self.scale
+    self.move_timer = self.move_timer or 0
+    self.move_state = self.move_state or "moving"
+    self.move_direction = self.move_direction or 1
+    self.move_delay = self.animationSpeed
 
-    self.animations.idle:update(dt)
+    self.move_timer = self.move_timer + dt
+
+    if self.state ~= "sleeping" then
+        if self.move_state == "moving" then
+            if self.move_timer >= self.move_delay then
+                self.move_state = "waiting"
+                self.move_timer = 0
+            end
+
+            local buttonDifference = (self.move_direction == 1 and 1 or -1) * buttonsWidth
+            local next_x = self.x + (self.move_direction == 1 and 1 or -1) + buttonDifference
+            local max_x = ww - self.spriteWidth - buttonsWidth
+
+
+            if next_x < 0 or next_x > max_x then
+                self.move_direction = 1 - self.move_direction
+            end
+
+            self.x = self.x + (self.move_direction == 1 and 1 or -1)
+        elseif self.move_state == "waiting" then
+            if self.move_timer >= self.move_delay then
+                self.move_direction = love.math.random(0, 1)
+                self.move_state = "moving"
+                self.move_timer = 0
+            end
+        end
+    end
+
+    self.anim:update(dt)
 end
 
 function Pet:draw()
-    self.animations.idle:draw(self.spriteSheet, self.x, self.y, nil, self.scale, self.scale)
+    self.anim:draw(self.spriteSheet, self.x, self.y, nil, self.scale, self.scale)
+end
+
+function Pet:feed()
+    self.anim = self.animations.sleeping
+    self.state = "sleeping"
 end

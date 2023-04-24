@@ -1,5 +1,7 @@
 Pet = {}
 
+local gameclock = require("gameclock")
+
 function Pet:load()
     ww, wh = love.graphics.getDimensions()
 
@@ -37,6 +39,9 @@ end
 
 function Pet:update(dt)
     local buttonsWidth = ww * (1 / 5)
+    local hour = gameclock.game_hour
+    local minute = gameclock.game_minute
+    local second = gameclock.game_second
 
     self.move_timer = self.move_timer or 0
     self.move_state = self.move_state or "moving"
@@ -69,6 +74,11 @@ function Pet:update(dt)
                 self.move_timer = 0
             end
         end
+    end
+
+    if second == 10 then
+        self.state = "sleeping"
+        self.anim = self.animations[self.level].sleeping
     end
 
     self.anim:update(dt)

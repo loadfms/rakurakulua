@@ -1,5 +1,6 @@
 require "button"
 require "pet"
+local gameclock = require("gameclock")
 
 Ui = {}
 
@@ -35,6 +36,7 @@ function Ui:update(dt)
 
 
     Pet:update(dt)
+    gameclock.update(dt)
 end
 
 function Ui:draw()
@@ -48,6 +50,8 @@ function Ui:draw()
     end
 
     Pet:draw()
+    love.graphics.print(string.format("%02d:%02d:%02d", gameclock.game_hour, gameclock.game_minute, gameclock.game_second)
+        , 10, 10)
 end
 
 function Ui:mousepressed(x, y, buttonIndex)

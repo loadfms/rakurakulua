@@ -28,11 +28,11 @@ function Pet:load()
     self.animations[1] = {}
     self.animations[2] = {}
 
-    self.animations[1].idle = anim8.newAnimation(self.grid('1-2', 14), self.animationSpeed)
-    self.animations[1].sleeping = anim8.newAnimation(self.grid('1-2', 13), self.animationSpeed)
+    self.animations[1]["idle"] = anim8.newAnimation(self.grid('1-2', 14), self.animationSpeed)
+    self.animations[1]["sleeping"] = anim8.newAnimation(self.grid('1-2', 13), self.animationSpeed)
 
-    self.animations[2].idle = anim8.newAnimation(self.grid('1-2', 12), self.animationSpeed)
-    self.animations[2].sleeping = anim8.newAnimation(self.grid('1-2', 11), self.animationSpeed)
+    self.animations[2]["idle"] = anim8.newAnimation(self.grid('1-2', 12), self.animationSpeed)
+    self.animations[2]["sleeping"] = anim8.newAnimation(self.grid('1-2', 11), self.animationSpeed)
 
     self.anim = self.animations[self.level].idle
 end
@@ -49,6 +49,8 @@ function Pet:update(dt)
     self.move_delay = self.animationSpeed
 
     self.move_timer = self.move_timer + dt
+
+    self.anim = self.animations[self.level][self.state]
 
     if self.state ~= "sleeping" then
         if self.move_state == "moving" then
@@ -78,7 +80,6 @@ function Pet:update(dt)
 
     if second == 10 then
         self.state = "sleeping"
-        self.anim = self.animations[self.level].sleeping
     end
 
     self.anim:update(dt)
@@ -96,6 +97,5 @@ function Pet:evolve()
 end
 
 function Pet:feed()
-    self.anim = self.animations[self.level].sleeping
     self.state = "sleeping"
 end

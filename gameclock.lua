@@ -30,4 +30,26 @@ function gameclock.update(dt)
     end
 end
 
+function gameclock.save()
+    local file = io.open("data", "w")
+    file:write(gameclock.game_hour .. "\n")
+    file:write(gameclock.game_minute .. "\n")
+    file:write(gameclock.game_second .. "\n")
+    file:write(gameclock.game_day .. "\n")
+    file:close()
+end
+
+function gameclock.load()
+    local file = io.open("data", "r")
+    if file then
+        gameclock.game_hour = tonumber(file:read("*line"))
+        gameclock.game_minute = tonumber(file:read("*line"))
+        gameclock.game_second = tonumber(file:read("*line"))
+        gameclock.game_day = tonumber(file:read("*line"))
+        file:close()
+    else
+        gameclock.game_hour = 8
+    end
+end
+
 return gameclock

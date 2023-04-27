@@ -18,10 +18,12 @@ function Button:new(col, i, margin, slug, spriteRow)
 end
 
 function Button:load()
-    self.spriteSheet = love.graphics.newImage('assets/pet.png')
+    self.spriteSheetLight = love.graphics.newImage('assets/pet.png')
+    self.spriteSheetDark = love.graphics.newImage('assets/pet_dark.png')
+    self.spriteSheet = self.spriteSheetLight
 
-    self.spriteWidth = 13
-    self.spriteHeight = 13
+    self.spriteWidth = 24
+    self.spriteHeight = 24
     self.grid = anim8.newGrid(self.spriteWidth, self.spriteHeight, self.spriteSheet:getWidth(),
         self.spriteSheet:getHeight())
     self.scale = 2
@@ -33,10 +35,10 @@ end
 function Button:update(dt)
     local ww, wh = love.graphics.getDimensions()
 
-    self.width   = ww * (1 / 7)
-    self.height  = wh * (1 / 5)
-    self.y       = (self.i * (self.height + self.margin)) + 13
-    self.x       = (self.col * (ww - self.width)) + 13
+    self.width   = (self.spriteWidth * self.scale)
+    self.height  = (self.spriteHeight * self.scale)
+    self.y       = (self.i * (self.height + self.margin))
+    self.x       = self.col == 0 and self.width / 2 or ww - self.width
 end
 
 function Button:draw()
@@ -48,4 +50,8 @@ function Button:mousepressed(x, y, buttonIndex)
         print("clicked on ", self.slug)
         return self.slug
     end
+end
+
+function Button:toggleLights()
+    self.spriteSheet = self.spriteSheet == self.spriteSheetLight and self.spriteSheetDark or self.spriteSheetLight
 end

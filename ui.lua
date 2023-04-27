@@ -6,8 +6,11 @@ Ui = {}
 
 function Ui:load()
     self.buttons = {}
-    local margin = 0
+    local margin = 6
 
+    self.bgRed = 137 / 255
+    self.bgGreen = 213 / 255
+    self.bgBlue = 185 / 255
 
     table.insert(self.buttons, Button:new(0, 0, margin, "water", 10))
     table.insert(self.buttons, Button:new(0, 1, margin, "food", 8))
@@ -40,17 +43,15 @@ function Ui:update(dt)
 end
 
 function Ui:draw()
-    local red = 137 / 255
-    local green = 213 / 255
-    local blue = 185 / 255
-    love.graphics.setBackgroundColor(red, green, blue)
+    love.graphics.setBackgroundColor(self.bgRed, self.bgGreen, self.bgBlue)
 
     for _, button in ipairs(self.buttons) do
         button:draw()
     end
 
     Pet:draw()
-    love.graphics.print(string.format("%02d:%02d:%02d", gameclock.game_hour, gameclock.game_minute, gameclock.game_second)
+    love.graphics.print(
+        string.format("%02d:%02d:%02d", gameclock.game_hour, gameclock.game_minute, gameclock.game_second)
         , 10, 10)
 end
 
@@ -64,5 +65,19 @@ function Ui:mousepressed(x, y, buttonIndex)
         if action == "pet" then
             Pet:evolve()
         end
+
+        if action == "lights" then
+            Ui:toggleLights()
+            Pet:toggleLights()
+            for _, item in ipairs(self.buttons) do
+                item:toggleLights()
+            end
+        end
     end
+end
+
+function Ui:toggleLights()
+    self.bgRed = self.bgRed == 0 and 137 / 255 or 0
+    self.bgGreen = self.bgGreen == 0 and 213 / 255 or 0
+    self.bgBlue = self.bgBlue == 0 and 185 / 255 or 0
 end
